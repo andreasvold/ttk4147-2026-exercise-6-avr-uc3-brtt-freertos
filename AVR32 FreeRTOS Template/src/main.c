@@ -36,6 +36,14 @@ void busy_delay_short(void){
     }
 }
 
+struct Taskargs {
+	struct {
+		uint32_t test;
+		uint32_t response;
+	} pin;
+};
+
+
 void init(){
 	board_init();
 	
@@ -55,37 +63,68 @@ void init(){
 	    setbuf(stdin,  NULL);
     #endif
 }
+ static void TaskA(void* args){
+	 struct Taskargs a = *(struct Taskargs*)args;
+	 while(1){
+		 if(gpio_pin_is_low(a.pin.test)){
+			 gpio_set_pin_low(a.pin.response);
+		 }
+		 else{
+			 gpio_set_pin_high(a.pin.response);
 
-static void taskFn1(void* args){
-	const portTickType delay = 200 / portTICK_RATE_MS;
+		 }
+	 }
+ }
+  static void TaskB(void* args){
+	  struct Taskargs b = *(struct Taskargs*)args;
+	  while(1){
+		  if(gpio_pin_is_low(b.pin.test)){
+			 gpio_set_pin_low(b.pin.response);
+		  }
+		  else{
+			 gpio_set_pin_high(b.pin.response);
+
+		  }
+	  }
+  }
+   static void TaskC(void* args){
+	   struct Taskargs c = *(struct Taskargs*)args;
+	   while(1){
+		   if(gpio_pin_is_low(c.pin.test)){
+			   gpio_set_pin_low(c.pin.response);
+		   }
+		   else{
+			   gpio_set_pin_high(c.pin.response);
+
+		   }
+	   }
+   }
+
+/*const portTickType delay = 200 / portTICK_RATE_MS;
+
+int iter = 0;
+
+while(1){
+	gpio_toggle_pin(LED0_GPIO);
+	printf("tick %d\n", iter++);
 	
-    int iter = 0;
-
-	while(1){
-		gpio_toggle_pin(LED0_GPIO);
-		printf("tick %d\n", iter++);
-		
-		vTaskDelay(delay);
-	}
-}
-static void taskFn2(void* args){
-	const portTickType delay = 500 / portTICK_RATE_MS;
-
-	int iter = 0;
-
-	while(1){
-		gpio_toggle_pin(LED1_GPIO);
-		printf("tick %d\n", iter++);
-		
-		vTaskDelay(delay);
-	}
-}
+	vTaskDelay(delay);
+}*/
 
 int main(){
 	init();
         
-	xTaskCreate(taskFn1, "", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
-	xTaskCreate(taskFn2, "", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
+	xTaskCreate(TaskA, "taska", 1024,
+	(&(struct Taskargs){{TEST_A, RESPONSE_A}}),
+	tskIDLE_PRIORITY + 1, NULL);
+	
+	xTaskCreate(TaskB, "taskb", 1024,
+	(&(struct Taskargs){{TEST_B, RESPONSE_B}}),
+	tskIDLE_PRIORITY + 1, NULL);
+	
+	xTaskCreate(TaskC, "taskc", 1024,
+	(&(struct Taskargs){{TEST_C, RESPONSE_C}}),
+	tskIDLE_PRIORITY + 1, NULL);	
 
 	// Start the scheduler, anything after this will not run.
 	vTaskStartScheduler();
