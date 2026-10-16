@@ -68,6 +68,7 @@ void init(){
 	 while(1){
 		 if(gpio_pin_is_low(a.pin.test)){
 			 gpio_set_pin_low(a.pin.response);
+			 vTaskDelay(0);
 		 }
 		 else{
 			 gpio_set_pin_high(a.pin.response);
@@ -80,6 +81,7 @@ void init(){
 	  while(1){
 		  if(gpio_pin_is_low(b.pin.test)){
 			 gpio_set_pin_low(b.pin.response);
+			 vTaskDelay(0);
 		  }
 		  else{
 			 gpio_set_pin_high(b.pin.response);
@@ -92,6 +94,7 @@ void init(){
 	   while(1){
 		   if(gpio_pin_is_low(c.pin.test)){
 			   gpio_set_pin_low(c.pin.response);
+			   vTaskDelay(0);
 		   }
 		   else{
 			   gpio_set_pin_high(c.pin.response);
