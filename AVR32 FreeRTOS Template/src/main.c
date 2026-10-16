@@ -95,7 +95,6 @@ void init(){
 		   }
 		   else{
 			   gpio_set_pin_high(c.pin.response);
-
 		   }
 	   }
    }
