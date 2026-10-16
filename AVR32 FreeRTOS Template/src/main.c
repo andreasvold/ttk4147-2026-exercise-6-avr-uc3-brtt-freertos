@@ -56,8 +56,8 @@ void init(){
     #endif
 }
 
-static void taskFn(void* args){
-	const portTickType delay = 1000 / portTICK_RATE_MS;
+static void taskFn1(void* args){
+	const portTickType delay = 200 / portTICK_RATE_MS;
 	
     int iter = 0;
 
@@ -68,12 +68,24 @@ static void taskFn(void* args){
 		vTaskDelay(delay);
 	}
 }
+static void taskFn2(void* args){
+	const portTickType delay = 500 / portTICK_RATE_MS;
 
+	int iter = 0;
+
+	while(1){
+		gpio_toggle_pin(LED1_GPIO);
+		printf("tick %d\n", iter++);
+		
+		vTaskDelay(delay);
+	}
+}
 
 int main(){
 	init();
         
-	xTaskCreate(taskFn, "", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
+	xTaskCreate(taskFn1, "", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
+	xTaskCreate(taskFn2, "", 1024, NULL, tskIDLE_PRIORITY + 1, NULL);
 
 	// Start the scheduler, anything after this will not run.
 	vTaskStartScheduler();
