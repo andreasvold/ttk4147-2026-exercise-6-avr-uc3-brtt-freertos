@@ -93,6 +93,7 @@ void init(){
 	   struct Taskargs c = *(struct Taskargs*)args;
 	   while(1){
 		   if(gpio_pin_is_low(c.pin.test)){
+			   busy_delay_ms(3);
 			   gpio_set_pin_low(c.pin.response);
 			   vTaskDelay(0);
 		   }
