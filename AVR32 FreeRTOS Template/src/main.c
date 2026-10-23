@@ -72,7 +72,7 @@ void init(){
 		 }
 		 else{
 			 gpio_set_pin_high(a.pin.response);
-
+			 vTaskDelay(1);
 		 }
 	 }
  }
@@ -85,7 +85,7 @@ void init(){
 		  }
 		  else{
 			 gpio_set_pin_high(b.pin.response);
-
+			 vTaskDelay(1);
 		  }
 	  }
   }
@@ -99,6 +99,8 @@ void init(){
 		   }
 		   else{
 			   gpio_set_pin_high(c.pin.response);
+			   vTaskDelay(1);
+
 		   }
 	   }
    }
@@ -119,11 +121,11 @@ int main(){
         
 	xTaskCreate(TaskA, "taska", 1024,
 	(&(struct Taskargs){{TEST_A, RESPONSE_A}}),
-	tskIDLE_PRIORITY + 1, NULL);
+	tskIDLE_PRIORITY + 2, NULL);
 	
 	xTaskCreate(TaskB, "taskb", 1024,
 	(&(struct Taskargs){{TEST_B, RESPONSE_B}}),
-	tskIDLE_PRIORITY + 1, NULL);
+	tskIDLE_PRIORITY + 2, NULL);
 	
 	xTaskCreate(TaskC, "taskc", 1024,
 	(&(struct Taskargs){{TEST_C, RESPONSE_C}}),
